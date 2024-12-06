@@ -68,6 +68,11 @@ jobs:
           Automated release of binary for upstream tag ${{ env.latest_tag }}.
         draft: false
         prerelease: false
-        artifacts: "ueberzugpp"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    -name: Upload binaries
+      uses: actions/upload-artifacts@v4
+      with:
+        name: "ueberzugpp"
+        path: "ueberzugpp"
