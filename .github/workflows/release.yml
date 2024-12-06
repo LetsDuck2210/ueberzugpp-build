@@ -44,7 +44,7 @@ jobs:
         git remote add upstream https://github.com/jstkdng/ueberzugpp.git
         git pull --rebase upstream master
 
-    -name: Install dependencies
+    - name: Install dependencies
       run: |
         # install dependencies
         sudo apt-get install -y libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev
