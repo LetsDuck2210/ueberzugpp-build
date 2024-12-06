@@ -17,7 +17,7 @@ jobs:
 
     - name: Fetch Upstream Tags
       run: |
-        git clone --bare https://github.com/jstkdng/ueberzugpp.git upstream-repo
+        git clone https://github.com/jstkdng/ueberzugpp.git upstream-repo
         cd upstream-repo
         latest_tag=$(git tag --sort=-v:refname | head -n 1)
         echo "Latest upstream tag: $latest_tag"
