@@ -33,11 +33,10 @@ jobs:
         fi
         echo "New release detected: ${{ env.latest_tag }}"
 
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-        with:
-          path: ueberzugpp
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        path: ueberzugpp
 
     - name: Sync Fork
       run: |
