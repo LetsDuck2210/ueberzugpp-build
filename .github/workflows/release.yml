@@ -71,7 +71,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    -name: Upload binaries
+    - name: Upload binaries
       uses: actions/upload-artifacts@v4
       with:
         name: "ueberzugpp"
