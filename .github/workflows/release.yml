@@ -44,7 +44,7 @@ jobs:
         git remote add upstream https://github.com/jstkdng/ueberzugpp.git
         git pull --rebase upstream master
 
-    - name: Build Binary
+    -name: Install dependencies
       run: |
         # install dependencies
         sudo apt-get install -y libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev
@@ -52,6 +52,8 @@ jobs:
         # install optional dependencies
         sudo apt-get install -y wayland-protocols extra-cmake-modules
 
+    - name: Build Binary
+      run: |
         mkdir build && cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_WAYLAND=ON ..
         cmake --build .
