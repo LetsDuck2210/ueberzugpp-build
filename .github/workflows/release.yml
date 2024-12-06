@@ -1,0 +1,69 @@
+name: Release Binary
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Every day
+  workflow_dispatch:
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Fetch Upstream Tags
+      run: |
+        git clone --bare https://github.com/jstkdng/ueberzugpp.git upstream-repo
+        cd upstream-repo
+        latest_tag=$(git tag --sort=-v:refname | head -n 1)
+        echo "Latest upstream tag: $latest_tag"
+        echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+
+    - name: Check Local Tags
+      run: |
+        git fetch --tags
+        if git rev-parse "refs/tags/${{ env.latest_tag }}" >/dev/null 2>&1; then
+          echo "No new release detected."
+          exit 0
+        fi
+        echo "New release detected: ${{ env.latest_tag }}"
+
+    - name: Sync Fork
+      run: |
+        git remote add upstream https://github.com/jstkdng/ueberzugpp.git
+        git fetch upstream
+        git merge upstream/main
+
+    - name: Build Binary
+      run: |
+        # install dependencies
+        apt-get install libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev
+
+        # install optional dependencies
+        apt-get install opencv xcb-util-image turbo-base64 libwayland wayland-protocols extra-cmake-modules
+
+        mkdir build && cd build
+        cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_WAYLAND=ON ..
+        cmake --build .
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ env.latest_tag }}
+        release_name: Release ${{ env.latest_tag }}
+        body: |
+          Automated release of binary for upstream tag ${{ env.latest_tag }}.
+        draft: false
+        prerelease: false
+
+    - name: Upload Binary
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: .
+        asset_name: ueberzug
+        asset_content_type: application/octet-stream
