@@ -47,7 +47,7 @@ jobs:
     - name: Install dependencies
       run: |
         # install dependencies
-        sudo apt-get install -y libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev
+        sudo apt-get install -y libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev libxcb-image0-dev
 
         # install optional dependencies
         sudo apt-get install -y wayland-protocols extra-cmake-modules
