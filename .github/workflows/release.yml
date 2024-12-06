@@ -72,7 +72,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload binaries
-      uses: AButler/upload-release-assets@v3
+      uses: AButler/upload-release-assets@v3.0
       with:
         files: "ueberzug"
         repo_token: ${{ secrets.GITHUB_TOKEN }}
