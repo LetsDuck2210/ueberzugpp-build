@@ -68,6 +68,8 @@ jobs:
           Automated release of binary for upstream tag ${{ env.latest_tag }}.
         draft: false
         prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Binary
       uses: actions/upload-release-asset@v1
