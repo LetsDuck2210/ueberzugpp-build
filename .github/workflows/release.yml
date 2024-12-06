@@ -79,5 +79,5 @@ jobs:
       with:
         files: ueberzug
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        release-tag: ${{ env.latest_tag }}
+        release-tag: Release ${{ env.latest_tag }}
 
