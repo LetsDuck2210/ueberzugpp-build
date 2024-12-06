@@ -25,6 +25,7 @@ jobs:
 
     - name: Check Local Tags
       run: |
+        pwd
         git fetch --tags
         if git rev-parse "refs/tags/${{ env.latest_tag }}" >/dev/null 2>&1; then
           echo "No new release detected."
