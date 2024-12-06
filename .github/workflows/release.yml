@@ -43,7 +43,7 @@ jobs:
         cd ueberzugpp
         git remote add upstream https://github.com/jstkdng/ueberzugpp.git
         git fetch upstream
-        git merge upstream/main
+        git merge upstream/master
 
     - name: Build Binary
       run: |
