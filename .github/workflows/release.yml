@@ -47,10 +47,10 @@ jobs:
     - name: Build Binary
       run: |
         # install dependencies
-        apt-get install libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev
+        sudo apt-get install -y libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev
 
         # install optional dependencies
-        apt-get install opencv xcb-util-image turbo-base64 libwayland wayland-protocols extra-cmake-modules
+        sudo apt-get install -y opencv xcb-util-image turbo-base64 libwayland wayland-protocols extra-cmake-modules
 
         mkdir build && cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_WAYLAND=ON ..
