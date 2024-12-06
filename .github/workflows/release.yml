@@ -75,5 +75,5 @@ jobs:
       uses: AButler/upload-release-assets@v3.0
       with:
         files: "ueberzug"
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 
