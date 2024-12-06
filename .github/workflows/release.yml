@@ -58,8 +58,8 @@ jobs:
       run: |
         cd ueberzugpp
         mkdir build && cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        cmake --build -DBUILD_SHARED_LIBS=OFF  .
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
+        cmake --build .
         cp ueberzug ../../ueberzug_x86_64
 
     - name: Create Release
