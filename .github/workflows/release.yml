@@ -42,7 +42,7 @@ jobs:
       run: |
         cd ueberzugpp
         git remote add upstream https://github.com/jstkdng/ueberzugpp.git
-        git pull --rebase upstream
+        git pull --rebase upstream master
 
     - name: Build Binary
       run: |
