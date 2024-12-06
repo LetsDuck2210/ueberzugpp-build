@@ -6,8 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-upstream:
+  build-newest:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Set up Git
@@ -76,4 +78,5 @@ jobs:
       with:
         files: "ueberzug"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+        release-tag: ${{ github.ref_name }}
 
