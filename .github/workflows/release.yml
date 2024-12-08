@@ -1,0 +1,91 @@
+name: Release Binary
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Every day
+  workflow_dispatch:
+
+jobs:
+  build-newest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Set up Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Fetch Upstream Tags
+      run: |
+        git clone https://github.com/jstkdng/ueberzugpp.git upstream-repo
+        cd upstream-repo
+        latest_tag=$(git tag --sort=-v:refname | head -n 1)
+        echo "Latest upstream tag: $latest_tag"
+        echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+
+    - name: Check Local Tags
+      id: check_local
+      run: |
+        cd upstream-repo
+        git fetch --tags
+        if git rev-parse "refs/tags/${{ env.latest_tag }}" >/dev/null 2>&1; then
+          echo "No new release detected."
+          exit 0
+        fi
+        echo "New release detected: ${{ env.latest_tag }}"
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      if: steps.check_local.conclusion == 'success'
+      with:
+        path: ueberzugpp
+
+    - name: Sync Fork
+      if: steps.check_local.conclusion == 'success'
+      run: |
+        cd ueberzugpp
+        git remote add upstream https://github.com/jstkdng/ueberzugpp.git
+        git pull --rebase upstream master
+        git push --force origin master
+
+    - name: Install dependencies
+      if: steps.check_local.conclusion == 'success'
+      run: |
+        # install dependencies
+        sudo apt-get install -y libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev libxcb-image0-dev libxcb-res0-dev libopencv-dev
+
+        # install optional dependencies
+        sudo apt-get install -y wayland-protocols extra-cmake-modules
+
+    - name: Build Binary
+      if: steps.check_local.conclusion == 'success'
+      run: |
+        cd ueberzugpp
+        mkdir build && cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build .
+        cp ueberzug ../../ueberzug_x86_64
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      if: steps.check_local.conclusion == 'success'
+      with:
+        tag_name: ${{ env.latest_tag }}
+        release_name: Release ${{ env.latest_tag }}
+        body: |
+          Automated release of binary for upstream tag ${{ env.latest_tag }}.
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload binaries
+      uses: AButler/upload-release-assets@v3.0
+      if: steps.check_local.conclusion == 'success'
+      with:
+        files: ueberzug_x86_64
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        release-tag: ${{ env.latest_tag }}
+
